@@ -5,6 +5,21 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns="melomel.core.uiClasses.*"
 >
+
+	<!-- Halo menu bar and menus -->
+	<s:VGroup left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="@label">
+			<fx:XMLList>
+				<menuitem label="alpha"></menuitem>
+				<menuitem label="bravo"></menuitem>
+				<menuitem label="charlie"></menuitem>
+				<menuitem label="delta"></menuitem>
+			</fx:XMLList>
+		</mx:MenuBar>
+	</s:VGroup>
+
+	<!-- Spark menu bar and menus -->
+
 	<s:VGroup id="container">
 		<s:HGroup id="subcontainer">
 			<s:Button id="button1"
@@ -16,13 +31,13 @@
 	</s:VGroup>
 
 	<s:Button id="button2" label="Click Me"/>
-	
+
 	<!-- Halo labeled component -->
 	<s:VGroup>
 		<mx:Label text="Foo Field"/>
 		<mx:TextInput id="fooField"/>
 	</s:VGroup>
-	
+
 	<!-- Spark labeled component -->
 	<s:VGroup>
 		<s:Label text="Bar Field"/>
@@ -36,19 +51,19 @@
 		</s:VGroup>
 		<mx:TextInput id="bazField"/>
 	</s:VGroup>
-	
+
 	<!-- Labeled label component -->
 	<s:VGroup>
 		<mx:Label text="First Name"/>
 		<mx:Label id="firstNameLabel"/>
 	</s:VGroup>
-	
+
 	<mx:Form>
 		<mx:FormItem label="Lucky Number">
 			<mx:TextInput id="formItemTextInput"/>
 		</mx:FormItem>
 	</mx:Form>
-	
+
 	<mx:TabNavigator creationPolicy="all">
 		<TestTab id="tab0"/>
 		<TestTab id="tab1"/>

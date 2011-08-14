@@ -83,6 +83,20 @@ public class UI
 	//	Search
 	//---------------------------------
 	
+	static public function findMenuBarItem( root: DisplayObject, 
+										   itemLabel: * ): Array
+	{
+		return [];
+	}
+
+	static public function findMenuItem( root: DisplayObject,
+										 itemLabel: * ): Array
+	{
+
+		return [];
+	}
+
+
 	/**
 	 *	A running count of matched objects within findAll(). This is not thread
 	 *	safe but luckily Flash only has one thread.

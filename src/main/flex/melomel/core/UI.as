@@ -15,6 +15,15 @@ import melomel.errors.MelomelError;
 
 import mx.containers.TabNavigator;
 
+import mx.controls.menuClasses.MenuBarItem;
+import mx.controls.MenuBar;
+
+import mx.collections.IViewCursor;
+import mx.collections.ICollectionView;
+import mx.collections.CursorBookmark;
+import mx.collections.XMLListCollection;
+import mx.collections.ArrayCollection;
+
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.InteractiveObject;
@@ -23,6 +32,7 @@ import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.utils.getDefinitionByName;
+import flash.utils.getQualifiedClassName;
 
 /**
  *	This class provides user interface related utility methods for finding
@@ -84,17 +94,73 @@ public class UI
 	//---------------------------------
 	
 	static public function findMenuBarItem( root: DisplayObject, 
-										   itemLabel: * ): Array
+											itemLabel: String ): *
 	{
-		return [];
+		var menuBars: Array = findAll( mx.controls.MenuBar, root );
+		var label: String;
+
+		trace( "Greetings from findMenuBarItem" );
+
+		if ( menuBars == null || menuBars.length == 0 ) trace( "Didn't find any menu bars" );
+
+		for each ( var menuBar: MenuBar in menuBars ) {
+
+			var dataCollection: ICollectionView =
+					MenuHelpers.makeCollectionFromDataProvider( menuBar.dataProvider );
+
+			var cursor: IViewCursor = dataCollection.createCursor();
+
+			var o: * = cursor.current;
+
+			trace( "Object at cursor is of type " + getQualifiedClassName( o ) );
+
+
+
+			for each ( var menuBarItem: MenuBarItem in menuBar.menuBarItems ) {
+
+				cursor.seek( CursorBookmark.FIRST, menuBarItem.menuBarItemIndex );
+
+				var itemData: * = cursor.current;
+
+				if ( menuBar.labelFunction != null ) {
+					label = menuBar.labelFunction( itemData );
+					if ( label == itemLabel ) return menuBarItem;
+				}
+				else if ( menuBar.labelField.length ) {
+					if ( label == itemData.attribute(menuBar.labelField)[ 0 ] ) return menuBarItem;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	static public function findMenuItem( root: DisplayObject,
-										 itemLabel: * ): Array
+										 itemLabel: * ): *
 	{
 
-		return [];
+		return "";
 	}
+
+	/**
+	 * From the Flex language reference entry for MenuBar dataProvider:-
+	 *
+	 * The hierarchy of objects that are displayed as MenuBar items and menus.
+	 * The top-level children all become MenuBar items, and their children
+	 * become the items in the menus and submenus. The MenuBar control handles
+	 * the source data object as follows:
+	 * 
+	 *   - A String containing valid XML text is converted to an XML object.
+	 *   - An XMLNode is converted to an XML object.
+	 *   - An XMLList is converted to an XMLListCollection.
+	 *   - Any object that implements the ICollectionView interface is cast to
+	 *     an ICollectionView.
+	 *   - An Array is converted to an ArrayCollection.
+	 *   - Any other type object is wrapped in an Array with the object as its
+	 *     sole entry.
+	 * 
+	 */
+
 
 
 	/**

@@ -9,5 +9,6 @@ public class CoreSuite
 	public var t2:ObjectProxyManagerTest;
 	public var t3:TypeTest;
 	public var t4:UITest;
+	public var t5:MenuHelpersTest;
 }
 }

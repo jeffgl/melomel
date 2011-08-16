@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns="melomel.core.uiClasses.*"
+>
+
+	<fx:Script>
+		<![CDATA[
+
+			private function labelFunction( item: * ): String
+			{
+				return ( item as XML ).@lima;
+			}
+
+		]]>
+	</fx:Script>
+
+	<!-- Halo menu bar and menus using XMLList as the dataProvider -->
+	<s:VGroup id="mbWithXMLListDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="@label">
+			<fx:XMLList>
+				<menuitem label="alpha"></menuitem>
+				<menuitem label="bravo"></menuitem>
+				<menuitem label="charlie"></menuitem>
+				<menuitem label="delta"></menuitem>
+			</fx:XMLList>
+		</mx:MenuBar>
+	</s:VGroup>
+
+	<!-- Halo menu bar and menus using XML as the dataProvider -->
+	<s:VGroup id="mbWithXMLDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="@label">
+			<fx:XML>
+				<root>
+					<menuitem label="echo"></menuitem>
+					<menuitem label="foxtrot"></menuitem>
+					<menuitem label="golf"></menuitem>
+				</root>
+			</fx:XML>
+		</mx:MenuBar>
+	</s:VGroup>
+
+	<!-- Halo menu bar and menus using XMLListCollection as the dataProvider -->
+	<s:VGroup id="mbWithXMLListColnDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="@label">
+			<mx:XMLListCollection>
+				<fx:XMLList>
+					<menuitem label="hotel"></menuitem>
+					<menuitem label="india"></menuitem>
+					<menuitem label="kilo"></menuitem>
+					<menuitem label="lima"></menuitem>
+					<menuitem label="mike"></menuitem>
+				</fx:XMLList>
+			</mx:XMLListCollection>
+		</mx:MenuBar>
+	</s:VGroup>
+
+	<!-- Halo menu bar and menus using string of valid xml as the dataProvider -->
+	<s:VGroup id="mbWithStringDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="@label" dataProvider="&lt;root&gt;&lt;menuitem label='november'/&gt; &lt;menuitem label='oscar'/&gt; &lt;menuitem label='papa'/&gt; &lt;menuitem label='quebec'/&gt; &lt;menuitem label='romeo'/&gt;&lt;/root&gt;"/>
+	</s:VGroup>
+
+
+	<!-- Halo menu bar and menus using ArrayCollection as the dataProvider -->
+	<s:VGroup id="mbWithArrayColnDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="country">
+			<mx:ArrayCollection>
+				<fx:Array>
+					<fx:Object name="Jodie" country="UK" language="English"/>
+					<fx:Object name="Kate" country="USA" language="German"/>
+					<fx:Object name="David" country="France" language="French"/>
+				</fx:Array>
+			</mx:ArrayCollection>
+		</mx:MenuBar>
+	</s:VGroup>
+
+
+	<!-- Halo menu bar and menus using Array as the dataProvider -->
+	<s:VGroup id="mbWithArrayDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelField="language">
+			<fx:Array>
+				<fx:Object name="Archie" country="UK" language="English"/>
+				<fx:Object name="Veronica" country="USA" language="Spanish"/>
+				<fx:Object name="Jennifer" country="France" language="French"/>
+			</fx:Array>
+		</mx:MenuBar>
+	</s:VGroup>
+
+
+	<!-- Halo menu bar and menus using Array as the dataProvider -->
+	<s:VGroup id="mbWithObjectDp" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar>
+			<fx:Object name="Jeff" country="AUS" language="English"/>
+		</mx:MenuBar>
+	</s:VGroup>
+
+
+
+	<!-- Halo menu bar and menus using label
+		 function rather than label property -->
+	<s:VGroup id="mbWithLabelFunction" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelFunction="{labelFunction}">
+			<fx:XMLList>
+				<menuitem lima="alpha"></menuitem>
+				<menuitem lima="bravo"></menuitem>
+				<menuitem lima="charlie"></menuitem>
+				<menuitem lima="delta"></menuitem>
+			</fx:XMLList>
+		</mx:MenuBar>
+	</s:VGroup>
+
+
+	<!-- Spark menu bar and menus -->
+
+</s:Application>

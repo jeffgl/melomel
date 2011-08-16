@@ -12,6 +12,8 @@ import spark.components.TextInput;
 import mx.collections.ArrayList;
 import mx.controls.ComboBox;
 import mx.controls.DataGrid;
+import mx.controls.MenuBar;
+import mx.controls.menuClasses.MenuBarItem;
 import mx.containers.Panel;
 import mx.core.FlexGlobals;
 import mx.events.FlexEvent;
@@ -188,6 +190,38 @@ public class UITest
 	{
 		var component:Object = UI.findLabeled("mx.controls.TextInput", "Lucky Number", sandbox);
 		Assert.assertEquals(sandbox.formItemTextInput, component);
+	}
+
+
+	[Test(timeout="1000")]
+	public function shouldFindMenuBarItemUsingLabelProperty():void
+	{
+		var component:Object = UI.findMenuBarItem(sandbox.mbWithLabels, "alpha");
+		Assert.assertTrue(component is mx.controls.menuClasses.MenuBarItem);
+	}
+
+
+	[Test(timeout="1000")]
+	public function shouldNotFindMenuBarItemUsingLabelProperty():void
+	{
+		var component:Object = UI.findMenuBarItem(sandbox.mbWithLabels, "november");
+		Assert.assertNull(component);
+	}
+
+
+	[Test(timeout="1000")]
+	public function shouldFindMenuBarItemUsingLabelFunction():void
+	{
+		var component:Object = UI.findMenuBarItem(sandbox.mbWithLabelFunction, "alpha");
+		Assert.assertTrue(component is mx.controls.menuClasses.MenuBarItem);
+	}
+
+
+	[Test(timeout="1000")]
+	public function shouldNotFindMenuBarItemUsingLabelFunction():void
+	{
+		var component:Object = UI.findMenuBarItem(sandbox.mbWithLabelFunction, "november");
+		Assert.assertNull(component);
 	}
 
 

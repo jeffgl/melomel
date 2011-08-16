@@ -6,8 +6,22 @@
 	xmlns="melomel.core.uiClasses.*"
 >
 
-	<!-- Halo menu bar and menus -->
-	<s:VGroup left="10" right="10" top="10" bottom="10">
+	<fx:Script>
+		<![CDATA[
+
+			private function labelFunction( item: * ): String
+			{
+				//if ( item.attributey( "lima" ) ) return item.lima;
+
+				return ( item as XML ).@lima;
+			}
+
+		]]>
+	</fx:Script>
+
+	<!-- Halo menu bar and menus using label
+		 field for menu bar item labels -->
+	<s:VGroup id="mbWithLabels" left="10" right="10" top="10" bottom="10">
 		<mx:MenuBar labelField="@label">
 			<fx:XMLList>
 				<menuitem label="alpha"></menuitem>
@@ -17,6 +31,20 @@
 			</fx:XMLList>
 		</mx:MenuBar>
 	</s:VGroup>
+
+	<!-- Halo menu bar and menus using label
+		 function rather than label property -->
+	<s:VGroup id="mbWithLabelFunction" left="10" right="10" top="10" bottom="10">
+		<mx:MenuBar labelFunction="{labelFunction}">
+			<fx:XMLList>
+				<menuitem lima="alpha"></menuitem>
+				<menuitem lima="bravo"></menuitem>
+				<menuitem lima="charlie"></menuitem>
+				<menuitem lima="delta"></menuitem>
+			</fx:XMLList>
+		</mx:MenuBar>
+	</s:VGroup>
+
 
 	<!-- Spark menu bar and menus -->
 

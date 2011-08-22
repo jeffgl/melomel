@@ -49,6 +49,7 @@
 				<fx:XMLList>
 					<menuitem label="hotel"></menuitem>
 					<menuitem label="india"></menuitem>
+					<menuitem label="juliet"></menuitem>
 					<menuitem label="kilo"></menuitem>
 					<menuitem label="lima"></menuitem>
 					<menuitem label="mike"></menuitem>

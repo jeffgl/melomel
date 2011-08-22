@@ -65,10 +65,10 @@ public class MenuHelpers
 	 *   - An XMLNode is converted to an XML object.
 	 *   - An XMLList is converted to an XMLListCollection.
 	 *   - Any object that implements the ICollectionView interface is cast to
-	 *     an ICollectionView.
+	 *	 an ICollectionView.
 	 *   - An Array is converted to an ArrayCollection.
 	 *   - Any other type object is wrapped in an Array with the object as its
-	 *     sole entry.
+	 *	 sole entry.
 	 * 
 	 */
 	static public function makeCollectionFromDataProvider( dp: * ): ICollectionView
@@ -95,10 +95,35 @@ public class MenuHelpers
 		return ( new ArrayCollection( [ dp ] ) as ICollectionView );
 	}
 
+	/**
+	 *  Get the label string from a MenuBarItem's data.
+	 *
+	 *  @param menuBar
+	 *  The MenuBar containing the item.
+	 *
+	 *  @param itemData
+	 *  The itemData used to create the label for a particular menu item.
+	 *  
+	 *  @return
+	 *  A string representing a menu bar item label, or null if the string 
+	 *  could not be found.
+	 */
+	static public function  getMenuBarItemLabel( menuBar: MenuBar, itemData: * ): String
+	{
+		if ( menuBar.labelFunction != null ) {
+			return menuBar.labelFunction( itemData );
+			if ( label == itemLabel ) return menuBarItem;
+		}
+		else if ( menuBar.labelField.length ) {
+			return getLabelFieldValue( itemData, menuBar.labelField );
+		}
+
+		return null;
+	}
 
 	/**
-	 *	Get the value of the 'label field' from an object, regardless 
-	 *	of the object's type.
+	 *	Get the value of the 'label field' from a data provider object,
+	 *  regardless of the object's type.
 	 *
 	 *	@param itemData
 	 *	An object, or XML, that is used as the source of a label for a 
@@ -109,7 +134,7 @@ public class MenuHelpers
 	 *	identifies where, within itemData, a menu label is stored.
 	 *
 	 *	@return
-	 *	The desired labe field value.
+	 *	The desired label field value.
 	 */
 	static public function getLabelFieldValue( itemData: *, labelField: String ): *
 	{
@@ -135,6 +160,7 @@ public class MenuHelpers
 
 	static public function getLabelFieldValueFromXML( xml: XML, labelField: String ): *
 	{
+		trace( "getLabelFieldValueFromXML: xml == " + xml.toString() + " labelField == " + labelField );
 		if ( labelField.charAt(0) == "@" ) return xml.attribute( labelField.slice(1) )[0].toString();
 		else return xml.child( labelField ).text();
 		return null;

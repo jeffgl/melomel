@@ -122,13 +122,9 @@ public class UI
 
 				var itemData: * = cursor.current;
 
-				if ( menuBar.labelFunction != null ) {
-					label = menuBar.labelFunction( itemData );
-					if ( label == itemLabel ) return menuBarItem;
-				}
-				else if ( menuBar.labelField.length ) {
-					if ( label == itemData.attribute(menuBar.labelField)[ 0 ] ) return menuBarItem;
-				}
+				label = MenuHelpers.getMenuBarItemLabel( menuBar, itemData );
+
+				if ( label == itemLabel ) return menuBarItem;
 			}
 		}
 
@@ -154,10 +150,10 @@ public class UI
 	 *   - An XMLNode is converted to an XML object.
 	 *   - An XMLList is converted to an XMLListCollection.
 	 *   - Any object that implements the ICollectionView interface is cast to
-	 *     an ICollectionView.
+	 *	 an ICollectionView.
 	 *   - An Array is converted to an ArrayCollection.
 	 *   - Any other type object is wrapped in an Array with the object as its
-	 *     sole entry.
+	 *	 sole entry.
 	 * 
 	 */
 
@@ -172,12 +168,12 @@ public class UI
 	/**
 	 *	Recursively searches the display hiearchy to find a display object.
 	 *	
-	 *	@param clazz       The class to match.
-	 *	@param root        The root display object to start from.
+	 *	@param clazz	   The class to match.
+	 *	@param root		The root display object to start from.
 	 *	@param properties  A hash of property values to match.
 	 *	
-	 *	@return            A list of display objects matching the class and
-	 *	                   properties specified in the criteria.
+	 *	@return			A list of display objects matching the class and
+	 *					   properties specified in the criteria.
 	 */
 	static public function findAll(clazz:Object, root:DisplayObject,
 								   properties:Object=null, limit:uint=0):Array
@@ -236,7 +232,7 @@ public class UI
 	}
 
 	static private function _findAll(classes:Array, root:DisplayObject,
-								     properties:Object, limit:uint=0):Array
+									 properties:Object, limit:uint=0):Array
 	{
 		// Match root object first
 		var objects:Array = new Array();
@@ -323,12 +319,12 @@ public class UI
 	/**
 	 *	Recursively searches the display hiearchy to find a display object.
 	 *	
-	 *	@param clazz       The class to match.
-	 *	@param root        The root display object to start from.
+	 *	@param clazz	   The class to match.
+	 *	@param root		The root display object to start from.
 	 *	@param properties  A hash of property values to match.
 	 *	
-	 *	@return            A display object matching the class and properties
-	 *	                   specified in the criteria.
+	 *	@return			A display object matching the class and properties
+	 *					   specified in the criteria.
 	 */
 	static public function find(clazz:Object, root:DisplayObject,
 								properties:Object=null):*
@@ -343,13 +339,13 @@ public class UI
 	 *	hierarchy and then recursively searching the parent for the first
 	 *	component matching a given class.
 	 *	
-	 *	@param clazz       The class to match.
+	 *	@param clazz	   The class to match.
 	 *	@param labelText   The label text to match.
-	 *	@param root        The root display object to start from.
+	 *	@param root		The root display object to start from.
 	 *	@param properties  A hash of property values to match.
 	 *	
-	 *	@return            The display object that is labeled by another
-	 *                     display object.
+	 *	@return			The display object that is labeled by another
+	 *					 display object.
 	 */
 	static public function findLabeled(clazz:Object, labelText:String,
 									   root:DisplayObject,
@@ -377,8 +373,8 @@ public class UI
 	 *	
 	 *	@param object  The display object to verify.
 	 *	
-	 *	@return        True if all parents and object are visible. Otherwise,
-	 *                 returns false.
+	 *	@return		True if all parents and object are visible. Otherwise,
+	 *				 returns false.
 	 */
 	static public function isVisible(object:DisplayObject):Boolean
 	{
@@ -409,10 +405,10 @@ public class UI
 	/**
 	 *	Generalizes the interaction with a component.
 	 *	
-	 *	@param event       The event.
+	 *	@param event	   The event.
 	 *	@param component   The component to interact with.
 	 *	@param properties  A hash of properties to set on the event object.
-	 *	@param flags       A list of flags determining the behavior.
+	 *	@param flags	   A list of flags determining the behavior.
 	 */
 	static private function interact(event:Event, component:Object,
 									 properties:Object):void
@@ -558,7 +554,7 @@ public class UI
 	 *	Imitates the a keyboard key being pressed down on a component.
 	 *	
 	 *	@param component   The component that should receive the event.
-	 *	@param char        The keyboard character being pressed.
+	 *	@param char		The keyboard character being pressed.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
 	static public function keyDown(component:InteractiveObject, char:Object,
@@ -575,7 +571,7 @@ public class UI
 	 *	Imitates the a keyboard key being released on a component.
 	 *	
 	 *	@param component   The component that should receive the event.
-	 *	@param char        The keyboard character being pressed.
+	 *	@param char		The keyboard character being pressed.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
 	static public function keyUp(component:InteractiveObject, char:Object,
@@ -592,7 +588,7 @@ public class UI
 	 *	Imitates the a keyboard key being pressed and released on a component.
 	 *	
 	 *	@param component   The component that should receive the event.
-	 *	@param char        The keyboard character being pressed.
+	 *	@param char		The keyboard character being pressed.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
 	static public function keyPress(component:InteractiveObject, char:Object,
@@ -616,10 +612,10 @@ public class UI
 	 *	Generates a list of labels from a data control.
 	 *
 	 *	@param component  A data control or column which has an itemToLabel()
-	 *	                  method.
-	 *	@param data       The dataset to generate labels from.
+	 *					  method.
+	 *	@param data	   The dataset to generate labels from.
 	 *
-	 *	@return           A list of labels generated by the component.
+	 *	@return		   A list of labels generated by the component.
 	 */
 	static public function itemsToLabels(component:Object, data:Object):Array
 	{

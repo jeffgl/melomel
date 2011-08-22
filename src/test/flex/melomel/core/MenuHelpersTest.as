@@ -75,7 +75,7 @@ public class MenuHelpersTest
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfXmlsFromXMLListDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithXMLListDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithXMLListDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
@@ -88,13 +88,14 @@ public class MenuHelpersTest
 			Assert.assertEquals( "XML", getQualifiedClassName( cursor.current ) );
 		}
 
-        Assert.assertEquals( 4, collection.length );
+		Assert.assertEquals( 4, collection.length );
 	}
 
+	[Ignore]
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfXmlsFromXmlDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithXMLDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithXMLDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
@@ -107,34 +108,40 @@ public class MenuHelpersTest
 			Assert.assertEquals( "XML", getQualifiedClassName( cursor.current ) );
 		}
 
-        Assert.assertEquals( 3, collection.length );
+		Assert.assertEquals( 3, collection.length );
 	}
 
 
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfXmlsFromXMLListColnDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithXMLListColnDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithXMLListColnDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
+		var labels: Array = ["hotel", "india", "juliet", "kilo", "lima", "mike"];
+
 		Assert.assertNotNull( collection );
 
+		var i: int = 0
 		for ( var cursor: IViewCursor = collection.createCursor();
 			  cursor.afterLast == false;
 			  cursor.moveNext() ) {
 
 			Assert.assertEquals( "XML", getQualifiedClassName( cursor.current ) );
+			Assert.assertEquals( labels[i], MenuHelpers.getMenuBarItemLabel( mb, cursor.current ) );
+			++i;
 		}
 
-        Assert.assertEquals( 5, collection.length );
+		Assert.assertEquals( 6, collection.length );
 	}
 
 
+	[Ignore]
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfXmlsFromStringDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithStringDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithStringDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
@@ -147,14 +154,15 @@ public class MenuHelpersTest
 			Assert.assertEquals( "XML", getQualifiedClassName( cursor.current ) );
 		}
 
-        Assert.assertEquals( 5, collection.length );
+		Assert.assertEquals( 5, collection.length );
 	}
 
 
+	[Ignore]
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfObjectsFromArrayColnDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithArrayColnDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithArrayColnDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
@@ -167,14 +175,15 @@ public class MenuHelpersTest
 			Assert.assertEquals( "Object", getQualifiedClassName( cursor.current ) );
 		}
 
-        Assert.assertEquals( 3, collection.length );
+		Assert.assertEquals( 3, collection.length );
 	}
 
 
+	[Ignore]
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfObjectsFromArrayDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithArrayDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithArrayDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
@@ -187,14 +196,15 @@ public class MenuHelpersTest
 			Assert.assertEquals( "Object", getQualifiedClassName( cursor.current ) );
 		}
 
-        Assert.assertEquals( 3, collection.length );
+		Assert.assertEquals( 3, collection.length );
 	}
 
 
+	[Ignore]
 	[Test(timeout="1000")]
 	public function shouldMakeCollectionOfObjectsFromObjectDp():void
 	{
-        var mb: MenuBar = sandbox.mbWithObjectDp.getChildAt(0) as MenuBar;
+		var mb: MenuBar = sandbox.mbWithObjectDp.getChildAt(0) as MenuBar;
 		var collection: ICollectionView =
 				MenuHelpers.makeCollectionFromDataProvider( mb.dataProvider );
 
@@ -207,8 +217,10 @@ public class MenuHelpersTest
 			Assert.assertEquals( "Object", getQualifiedClassName( cursor.current ) );
 		}
 
-        Assert.assertEquals( 1, collection.length );
+		Assert.assertEquals( 1, collection.length );
 	}
+
+
 
 }
 }

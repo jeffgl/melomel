@@ -130,6 +130,48 @@ public class UI
 
 		return null;
 	}
+	
+	static public function mapMenuBarItemToMenu( mbi: MenuBarItem ): Menu
+	{
+		var mb: MenuBar = mbi.menuBar;
+
+		return mb.menus[ mbi.menuBarItemIndex ];
+	}
+
+	static public function findListItem( root: DisplayObject,
+										 itemLabel: * ): *
+	{
+		var lists: Array = findAll( mx.controls.List, root );
+		var label: String;
+
+		trace( "Greetings from findListItem" );
+
+		if ( lists == null || lists.length == 0 ) trace( "Didn't find any lists" );
+
+		for each ( var list: List in lists ) {
+
+			var dataCollection: ICollectionView =
+					MenuHelpers.makeCollectionFromDataProvider( list.dataProvider );
+
+			var cursor: IViewCursor = dataCollection.createCursor();
+
+
+			var i: int = 0;
+			for ( var item: * = cursor.current;
+				  ! cursor.afterLast();
+				  cursor.findNext() ) {
+
+				if ( list.itemToLabel( cursor.current ) == itemLabel ) {
+					list.getChildAt( i );
+
+				}
+				++i;
+			}
+		}
+
+		return null;
+	}
+
 
 	static public function findMenuItem( root: DisplayObject,
 										 itemLabel: * ): *
@@ -138,24 +180,6 @@ public class UI
 		return "";
 	}
 
-	/**
-	 * From the Flex language reference entry for MenuBar dataProvider:-
-	 *
-	 * The hierarchy of objects that are displayed as MenuBar items and menus.
-	 * The top-level children all become MenuBar items, and their children
-	 * become the items in the menus and submenus. The MenuBar control handles
-	 * the source data object as follows:
-	 * 
-	 *   - A String containing valid XML text is converted to an XML object.
-	 *   - An XMLNode is converted to an XML object.
-	 *   - An XMLList is converted to an XMLListCollection.
-	 *   - Any object that implements the ICollectionView interface is cast to
-	 *	 an ICollectionView.
-	 *   - An Array is converted to an ArrayCollection.
-	 *   - Any other type object is wrapped in an Array with the object as its
-	 *	 sole entry.
-	 * 
-	 */
 
 
 

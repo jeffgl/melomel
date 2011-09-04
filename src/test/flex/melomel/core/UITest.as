@@ -14,6 +14,7 @@ import mx.controls.ComboBox;
 import mx.controls.DataGrid;
 import mx.controls.MenuBar;
 import mx.controls.menuClasses.MenuBarItem;
+import mx.controls.Menu;
 import mx.containers.Panel;
 import mx.core.FlexGlobals;
 import mx.events.FlexEvent;
@@ -36,10 +37,10 @@ public class UITest
 	//  Setup
 	//
 	//---------------------------------------------------------------------
-	
+
 	private var sandbox:Sandbox;
 	private var window:NativeWindow;
-	
+
 	[Before(async)]
 	public function setUp():void
 	{
@@ -47,19 +48,19 @@ public class UITest
 		Async.proceedOnEvent(this, sandbox, FlexEvent.CREATION_COMPLETE, 500);
 		UIImpersonator.addChild(sandbox);
 	}
-	
+
 	[After]
 	public function tearDown():void
 	{
 		UIImpersonator.removeChild(sandbox);
 		sandbox = null;
-		
+
 		if(window) {
 			window.close();
 		}
 	}
-	
-	
+
+
 	//---------------------------------------------------------------------
 	//
 	//  Static methods
@@ -224,6 +225,18 @@ public class UITest
 		Assert.assertNull(component);
 	}
 
+	[Test(timeout="1000")]
+	public function shouldFindMenuItem():void
+	{
+		var component:Object = UI.findMenuBarItem(sandbox.mbWithLabels, "bravo");
+		Assert.assertTrue(component is mx.controls.menuClasses.MenuBarItem);
+
+		var menu: * = UI.mapMenuBarItemToMenu( component as MenuBarItem );
+		Assert.assertTrue(menu is mx.controls.Menu);
+
+		var item: * = UI.findListItem( menu as Menu, "golf" );
+	}
+
 
 
 	//-----------------------------
@@ -290,7 +303,7 @@ public class UITest
 		window = new NativeWindow(new NativeWindowInitOptions());
 		window.stage.addChild(sprite);
 		window.activate();
-		
+
 		var component:DisplayObject = UI.find(Sprite, null, {name:"foo"});
 		Assert.assertEquals(sprite, component);
 	}
@@ -363,7 +376,7 @@ public class UITest
 		});
 		UI.keyDown(sandbox.textInput1, "a");
 	}
-	
+
 	[Test(async)]
 	public function keyDownWithUpperCaseLetter():void
 	{
@@ -373,7 +386,7 @@ public class UITest
 		});
 		UI.keyDown(sandbox.textInput1, "A");
 	}
-	
+
 	[Test(async)]
 	public function keyDownWithKeyCodeValue():void
 	{
@@ -393,14 +406,14 @@ public class UITest
 		});
 		UI.keyDown(sandbox.textInput1, Keyboard.ENTER);
 	}
-	
+
 	[Test(async)]
 	public function keyUpShouldFireKeyUpEvent():void
 	{
 		Async.proceedOnEvent(this, sandbox.textInput1, KeyboardEvent.KEY_UP);
 		UI.keyUp(sandbox.textInput1, "A");
 	}
-	
+
 	[Test(async)]
 	public function keyPressShouldFireKeyUpAndKeyDownEvent():void
 	{
@@ -408,8 +421,8 @@ public class UITest
 		Async.proceedOnEvent(this, sandbox.textInput1, KeyboardEvent.KEY_UP);
 		UI.keyPress(sandbox.textInput1, "A");
 	}
-	
-	
+
+
 	//-----------------------------
 	//  Data Control Interaction
 	//-----------------------------

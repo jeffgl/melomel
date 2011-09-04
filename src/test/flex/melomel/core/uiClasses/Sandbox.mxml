@@ -25,7 +25,12 @@
 		<mx:MenuBar labelField="@label">
 			<fx:XMLList>
 				<menuitem label="alpha"></menuitem>
-				<menuitem label="bravo"></menuitem>
+				<menuitem label="bravo">
+					<menuitem label="echo"></menuitem>
+					<menuitem label="foxtrot"></menuitem>
+					<menuitem label="golf"></menuitem>
+					<menuitem label="hotel"></menuitem>
+				</menuitem>
 				<menuitem label="charlie"></menuitem>
 				<menuitem label="delta"></menuitem>
 			</fx:XMLList>

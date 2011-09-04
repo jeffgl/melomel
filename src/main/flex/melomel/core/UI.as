@@ -17,6 +17,8 @@ import mx.containers.TabNavigator;
 
 import mx.controls.menuClasses.MenuBarItem;
 import mx.controls.MenuBar;
+import mx.controls.Menu;
+import mx.controls.List;
 
 import mx.collections.IViewCursor;
 import mx.collections.ICollectionView;
@@ -56,7 +58,7 @@ public class UI
 	static private var containerClass:Class = Type.getClass("mx.core.Container");
 	static private var tabNavigatorClass:Class = Type.getClass("mx.containers.TabNavigator");
 	static private var tabClass:Class = Type.getClass("mx.controls.tabBarClasses.Tab");
-	
+
 
 	//--------------------------------------------------------------------------
 	//
@@ -67,7 +69,7 @@ public class UI
 	//---------------------------------
 	//	Initialize
 	//---------------------------------
-	
+
 	/**
 	 *	Initializes the UI class. This is normally done automatically but can
 	 *	be called manually if rawChildrenClasses needs to be altered.
@@ -77,7 +79,7 @@ public class UI
 		// Setup default rawChildren classes in UI
 		if(!rawChildrenClasses) {
 			rawChildrenClasses = [];
-		
+
 			var classes:Array = ["mx.containers.FormItem", "mx.containers.Panel"];
 			for each(var className:String in classes) {
 				var clazz:Class = Type.getClass(className);
@@ -92,8 +94,8 @@ public class UI
 	//---------------------------------
 	//	Search
 	//---------------------------------
-	
-	static public function findMenuBarItem( root: DisplayObject, 
+
+	static public function findMenuBarItem( root: DisplayObject,
 											itemLabel: String ): *
 	{
 		var menuBars: Array = findAll( mx.controls.MenuBar, root );
@@ -130,25 +132,27 @@ public class UI
 
 		return null;
 	}
-	
+
 	static public function mapMenuBarItemToMenu( mbi: MenuBarItem ): Menu
 	{
 		var mb: MenuBar = mbi.menuBar;
 
-		return mb.menus[ mbi.menuBarItemIndex ];
+		trace( "menu bar item index: " + mbi.menuBarItemIndex );
+
+		return mb.getMenuAt( mbi.menuBarItemIndex );
 	}
 
 	static public function findListItem( root: DisplayObject,
 										 itemLabel: * ): *
 	{
-		var lists: Array = findAll( mx.controls.List, root );
+		var lists: Array = findAll( mx.controls.Menu, root );
 		var label: String;
 
 		trace( "Greetings from findListItem" );
 
 		if ( lists == null || lists.length == 0 ) trace( "Didn't find any lists" );
 
-		for each ( var list: List in lists ) {
+		for each ( var list: Menu in lists ) {
 
 			var dataCollection: ICollectionView =
 					MenuHelpers.makeCollectionFromDataProvider( list.dataProvider );
@@ -158,11 +162,15 @@ public class UI
 
 			var i: int = 0;
 			for ( var item: * = cursor.current;
-				  ! cursor.afterLast();
-				  cursor.findNext() ) {
+				  ! cursor.afterLast;
+				  cursor.moveNext() ) {
 
 				if ( list.itemToLabel( cursor.current ) == itemLabel ) {
-					list.getChildAt( i );
+					var m: * = list.getChildAt( i );
+
+					trace( "findListItem: type of m: " + getQualifiedClassName( m ) );
+
+					return m;
 
 				}
 				++i;
@@ -188,14 +196,14 @@ public class UI
 	 *	safe but luckily Flash only has one thread.
 	 */
 	static private var count:uint = 0;
-	
+
 	/**
 	 *	Recursively searches the display hiearchy to find a display object.
-	 *	
+	 *
 	 *	@param clazz	   The class to match.
 	 *	@param root		The root display object to start from.
 	 *	@param properties  A hash of property values to match.
-	 *	
+	 *
 	 *	@return			A list of display objects matching the class and
 	 *					   properties specified in the criteria.
 	 */
@@ -206,7 +214,7 @@ public class UI
 		if(!rawChildrenClasses) {
 			initialize();
 		}
-		
+
 		// Attempt to default root if not specified
 		if(!root) {
 			// If running AIR, use the active window's stage
@@ -219,7 +227,7 @@ public class UI
 				root = Melomel.stage;
 			}
 		}
-		
+
 		// Verify class is not null
 		if(!clazz) {
 			throw new MelomelError("A class name or reference is required");
@@ -228,12 +236,12 @@ public class UI
 		if(!root) {
 			throw new MelomelError("The root display object is required");
 		}
-		
+
 		// Convert clazz into an Array of classes.
 		if(!(clazz is Array)) {
 			clazz = [clazz];
 		}
-		
+
 		// Convert class name to class reference, if necessary
 		for(var i:int=0; i<clazz.length; i++) {
 			if(clazz[i] is String) {
@@ -245,7 +253,7 @@ public class UI
 				}
 			}
 		}
-		
+
 		// Throw error if none of the classes passed in were found.
 		if(clazz.length == 0) {
 			throw new MelomelError("Classes could not be found");
@@ -260,15 +268,15 @@ public class UI
 	{
 		// Match root object first
 		var objects:Array = new Array();
-		
+
 		// Attempt to match all classes
 		var match:Boolean;
 		for each(var clazz:Class in classes) {
 			match = false;
-			
+
 			if(root is clazz) {
 				match = true;
-				
+
 				if(properties) {
 					// Match display object on properties
 					for(var propName:String in properties) {
@@ -281,7 +289,7 @@ public class UI
 					}
 				}
 			}
-			
+
 			if(match) {
 				break;
 			}
@@ -290,12 +298,12 @@ public class UI
 		// If class and properties match then add to list of components
 		if(match && isVisible(root)) {
 			objects.push(root);
-			
+
 			if(limit > 0 && ++count >= limit) {
 				return objects;
 			}
 		}
-		
+
 		// Recursively search over children
 		if(root is DisplayObjectContainer) {
 			// Determine child lists
@@ -308,26 +316,26 @@ public class UI
 				{
 					lists.push((root as Object).rawChildren);
 				}
-			
+
 				for each(var rawChildrenClass:Class in rawChildrenClasses) {
 					if(root is rawChildrenClass) {
 						lists.push((root as Object).rawChildren);
 					}
 				}
 			}
-			
+
 			// Loop over all child lists
 			for each(var list:Object in lists) {
 				var numChildren:int = list.numChildren;
 				for(var i:int=0; i<numChildren; i++) {
 					var child:DisplayObject = list.getChildAt(i);
-				
+
 					// If matching descendants are found then append to list
 					var arr:Array = _findAll(classes, child, properties);
 					if(arr.length) {
 						objects = objects.concat(arr);
 					}
-				
+
 					// Exit if at limit.
 					if(limit > 0 && count >= limit) {
 						break;
@@ -335,18 +343,18 @@ public class UI
 				}
 			}
 		}
-		
+
 		// Return list of objects
 		return objects;
 	}
-	
+
 	/**
 	 *	Recursively searches the display hiearchy to find a display object.
-	 *	
+	 *
 	 *	@param clazz	   The class to match.
 	 *	@param root		The root display object to start from.
 	 *	@param properties  A hash of property values to match.
-	 *	
+	 *
 	 *	@return			A display object matching the class and properties
 	 *					   specified in the criteria.
 	 */
@@ -362,12 +370,12 @@ public class UI
 	 *	This method starts by finding the label, then going up the parent
 	 *	hierarchy and then recursively searching the parent for the first
 	 *	component matching a given class.
-	 *	
+	 *
 	 *	@param clazz	   The class to match.
 	 *	@param labelText   The label text to match.
 	 *	@param root		The root display object to start from.
 	 *	@param properties  A hash of property values to match.
-	 *	
+	 *
 	 *	@return			The display object that is labeled by another
 	 *					 display object.
 	 */
@@ -377,7 +385,7 @@ public class UI
 	{
 		// First find label
 		var label:DisplayObject = find(['mx.controls.Label', 'spark.components.Label'], root, {text:labelText})
-		
+
 		// If found, recursively search parent for component
 		if(label && label.parent) {
 			var components:Array = findAll(clazz, label.parent, properties);
@@ -394,9 +402,9 @@ public class UI
 	/**
 	 *	Checks if a display object is visible and all of its parents are
 	 *	visible.
-	 *	
+	 *
 	 *	@param object  The display object to verify.
-	 *	
+	 *
 	 *	@return		True if all parents and object are visible. Otherwise,
 	 *				 returns false.
 	 */
@@ -406,17 +414,17 @@ public class UI
 		if(object == null) {
 			return false;
 		}
-		
+
 		// Iterate up the parent hierarchy looking for invisible parents
 		while(object != null) {
 			// If we find an invisible parent, return false.
 			if(!object.visible) {
 				return false;
 			}
-			
+
 			object = object.parent;
 		}
-		
+
 		// If no parents were invisible, return true.
 		return true;
 	}
@@ -428,7 +436,7 @@ public class UI
 
 	/**
 	 *	Generalizes the interaction with a component.
-	 *	
+	 *
 	 *	@param event	   The event.
 	 *	@param component   The component to interact with.
 	 *	@param properties  A hash of properties to set on the event object.
@@ -441,12 +449,12 @@ public class UI
 		if(properties == null) {
 			properties = {};
 		}
-		
+
 		// If we are using a Flex component, make sure it is enabled
 		if(Type.typeOf(component, "mx.core.UIComponent") && !component.enabled) {
 			throw new MelomelError("Flex component is disabled");
 		}
-		
+
 		// Validate mouse-specific actions
 		if(event is MouseEvent) {
 			// Component must be mouse enabled
@@ -467,7 +475,7 @@ public class UI
 		if(event is KeyboardEvent) {
 			var char:Object = properties["char"];
 			delete properties["char"];
-			
+
 			// Verify that a key is specified to be pressed
 			if(char == null || char == "") {
 				throw new MelomelError("A keyboard key is required");
@@ -476,7 +484,7 @@ public class UI
 			if(char is String && char.length > 1) {
 				throw new MelomelError("Only one keyboard key can be pressed at a time");
 			}
-			
+
 			// Convert to keyCode & charCode
 			if(char is String) {
 				properties.charCode = char.charCodeAt(0);
@@ -499,7 +507,7 @@ public class UI
 			else {
 				throw new MelomelError("Keyboard character must be a string or a key code value");
 			}
-			
+
 			// Find UITextField inside text components
 			var textField:TextField = find(TextField, component as DisplayObject);
 			if(textField) {
@@ -511,14 +519,14 @@ public class UI
 		for(var propName:String in properties) {
 			event[propName] = properties[propName];
 		}
-		
+
 		// Dispatch event
 		component.dispatchEvent(event);
 	}
-	
+
 	/**
 	 *	Imitates a click on a component.
-	 *	
+	 *
 	 *	@param component   The component to click.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
@@ -527,13 +535,13 @@ public class UI
 	{
 		mouseDown(component, properties);
 		mouseUp(component, properties);
-		
+
 		interact(new MouseEvent(MouseEvent.CLICK), component, properties)
 	}
 
 	/**
 	 *	Imitates a double click on a component.
-	 *	
+	 *
 	 *	@param component   The component to double click.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
@@ -549,10 +557,10 @@ public class UI
 		click(component, properties);
 		interact(new MouseEvent(MouseEvent.DOUBLE_CLICK), component, properties)
 	}
-	
+
 	/**
 	 *	Imitates the mouse button clicking down on a component.
-	 *	
+	 *
 	 *	@param component   The component to click down.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
@@ -564,7 +572,7 @@ public class UI
 
 	/**
 	 *	Imitates the mouse button being released on a component.
-	 *	
+	 *
 	 *	@param component   The component to click up.
 	 *	@param properties  A hash of properties to set on the event object.
 	 */
@@ -573,10 +581,10 @@ public class UI
 	{
 		interact(new MouseEvent(MouseEvent.MOUSE_UP), component, properties)
 	}
-	
+
 	/**
 	 *	Imitates the a keyboard key being pressed down on a component.
-	 *	
+	 *
 	 *	@param component   The component that should receive the event.
 	 *	@param char		The keyboard character being pressed.
 	 *	@param properties  A hash of properties to set on the event object.
@@ -590,10 +598,10 @@ public class UI
 		properties["char"] = char;
 		interact(new KeyboardEvent(KeyboardEvent.KEY_DOWN), component, properties)
 	}
-	
+
 	/**
 	 *	Imitates the a keyboard key being released on a component.
-	 *	
+	 *
 	 *	@param component   The component that should receive the event.
 	 *	@param char		The keyboard character being pressed.
 	 *	@param properties  A hash of properties to set on the event object.
@@ -607,10 +615,10 @@ public class UI
 		properties["char"] = char;
 		interact(new KeyboardEvent(KeyboardEvent.KEY_UP), component, properties)
 	}
-	
+
 	/**
 	 *	Imitates the a keyboard key being pressed and released on a component.
-	 *	
+	 *
 	 *	@param component   The component that should receive the event.
 	 *	@param char		The keyboard character being pressed.
 	 *	@param properties  A hash of properties to set on the event object.
@@ -626,7 +634,7 @@ public class UI
 		keyDown(component, char, properties);
 		keyUp(component, char, properties);
 	}
-	
+
 
 	//---------------------------------
 	//	Data Control Interaction
@@ -647,14 +655,14 @@ public class UI
 		if(Type.typeOf(data, "mx.collections.ArrayList")) {
 			data = data.source;
 		}
-		
+
 		// Loop over collection and generate labels
 		var labels:Array = [];
-		
+
 		for each(var item:Object in data) {
 			labels.push(component.itemToLabel(item));
 		}
-		
+
 		return labels;
 	}
 
